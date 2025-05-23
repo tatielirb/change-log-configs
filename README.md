@@ -1,6 +1,23 @@
-# Nuxt Minimal Starter
+# Change Log Configs
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Prerequisites
+
+- [Node.js](https://nodejs.org/)
+- [VUE 3](https://vuejs.org/)
+- [Nuxt](https://nuxt.com/)
+- [NPM](https://www.npmjs.com/)
+
+
+## Technologies
+
+The technologies used in this project are:
+
+- [Node.js](https://nodejs.org/)
+- [VUE 3](https://vuejs.org/)
+- [Nuxt](https://nuxt.com/)
+- [NPM](https://www.npmjs.com/)
+- [TypeScript](https://www.typescriptlang.org/)
+
 
 ## Setup
 
@@ -28,14 +45,6 @@ Start the development server on `http://localhost:3000`:
 # npm
 npm run dev
 
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
 ## Production
@@ -46,14 +55,6 @@ Build the application for production:
 # npm
 npm run build
 
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
 ```
 
 Locally preview production build:
@@ -62,14 +63,6 @@ Locally preview production build:
 # npm
 npm run preview
 
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
