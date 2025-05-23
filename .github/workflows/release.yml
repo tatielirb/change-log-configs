@@ -1,22 +1,33 @@
-name: Release with Custom Changelog
+name: Create release changelog
 
 on:
   push:
     tags:
-      - 'v*.*.*' 
+      - 'v*.*.*'
 
 jobs:
-  changelog:
-    name: Generate Release Changelog
+  release-changelog:
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  
 
-      - name: Build Changelog and Create GitHub Release
-        uses: mikepenz/release-changelog-builder-action@v4
+      - name: Build release changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v3
         with:
           configuration: ".github/workflows/configs/release-changelog-config.json"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create release changelog
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          omitPrereleaseDuringUpdate: true
+          body: ${{ steps.github_release.outputs.changelog }}
+          token: ${{ secrets.GITHUB_TOKEN }}
