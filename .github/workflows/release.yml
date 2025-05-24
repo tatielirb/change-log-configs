@@ -19,13 +19,19 @@ jobs:
       - name: Show release changelog config
         run: cat .github/workflows/configs/release-changelog-config.json
 
+      # ✅ Teste de token
+      - name: Token test
+        run: echo "Token length: ${#GH_PAT}"
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+
       - name: Build release changelog
         id: github_release
         uses: mikepenz/release-changelog-builder-action@v4
         with:
           configuration: ".github/workflows/configs/release-changelog-config.json"
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}  
 
       - name: Create release changelog
         uses: ncipollo/release-action@v1
