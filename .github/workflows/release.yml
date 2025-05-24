@@ -25,7 +25,7 @@ jobs:
         with:
           configuration: ".github/workflows/configs/release-changelog-config.json"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
       - name: Create release changelog
         uses: ncipollo/release-action@v1
@@ -33,4 +33,4 @@ jobs:
           allowUpdates: true
           omitPrereleaseDuringUpdate: true
           body: ${{ steps.github_release.outputs.changelog }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PAT }}
