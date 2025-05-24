@@ -18,10 +18,8 @@ jobs:
 
       - name: Show release changelog config
         run: cat .github/workflows/configs/release-changelog-config.json
-
-      # ✅ Teste de token
       - name: Token test
-        run: echo "Token length: ${#GH_PAT}"
+        run: echo "Token length ${#GH_PAT}"
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
 
@@ -39,4 +37,4 @@ jobs:
           allowUpdates: true
           omitPrereleaseDuringUpdate: true
           body: ${{ steps.github_release.outputs.changelog }}
-          token: ${{ secrets.GH_PAT }}
+          token: ${{ secrets.GH_PAT }}  
