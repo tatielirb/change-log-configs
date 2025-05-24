@@ -12,13 +12,16 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0  
 
+      - name: Show release changelog config
+        run: cat .github/workflows/configs/release-changelog-config.json
+
       - name: Build release changelog
         id: github_release
-        uses: mikepenz/release-changelog-builder-action@v3
+        uses: mikepenz/release-changelog-builder-action@v4
         with:
           configuration: ".github/workflows/configs/release-changelog-config.json"
         env:
