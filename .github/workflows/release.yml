@@ -24,7 +24,6 @@ jobs:
         uses: mikepenz/release-changelog-builder-action@v4
         with:
           configuration: ".github/workflows/configs/release-changelog-config.json"
-          from: adc8e29235d938132d0c55e664c2ae7f3697cad9adc8e29235d938132d0c55e664c2ae7f3697cad9
           token: ${{ secrets.GH_PAT }} 
 
       - name: Create release changelog
