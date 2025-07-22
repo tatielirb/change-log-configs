@@ -48,6 +48,7 @@ async function main() {
 
   const groups = {}
   const noJira = []
+  const contributorsMap = new Map()
 
   for (const commit of commits) {
     const sha = commit.sha
@@ -57,19 +58,32 @@ async function main() {
     const title = pr.title
     const url = pr.html_url
     const number = pr.number
+    const user = pr.user
+
+
+    if (user) {
+      contributorsMap.set(user.login, {
+        login: user.login,
+        avatar: user.avatar_url,
+        html_url: user.html_url
+      })
+    }
 
     const match = jiraRegex.exec(title)
+    const line = `- ${title} ([#${number}](${url})) – por [@${user.login}](${user.html_url})`
     if (match) {
       const key = match[1]
       if (!groups[key]) groups[key] = []
-      groups[key].push(`- ${title} ([#${number}](${url}))`)
+      groups[key].push(line)
     } else {
-      noJira.push(`- ${title} ([#${number}](${url}))`)
+      noJira.push(line)
     }
   }
 
   let output = `# Changelog ${HEAD_TAG}\n\n`
-  for (const key of Object.keys(groups).sort()) {
+
+  const sortedKeys = Object.keys(groups).sort()
+  for (const key of sortedKeys) {
     output += `## ${key}\n`
     groups[key].forEach(line => output += line + "\n")
     output += "\n"
@@ -78,6 +92,15 @@ async function main() {
   if (noJira.length > 0) {
     output += `## Outros (sem key Jira)\n`
     noJira.forEach(line => output += line + "\n")
+    output += "\n"
+  }
+
+
+  if (contributorsMap.size > 0) {
+    output += `## 👥 Contribuidores\n\n`
+    for (const contributor of contributorsMap.values()) {
+      output += `[![](${contributor.avatar}&s=40)](${contributor.html_url}) [@${contributor.login}](${contributor.html_url})\n\n`
+    }
   }
 
   fs.writeFileSync("CHANGELOG.md", output)
