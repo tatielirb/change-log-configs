@@ -43,13 +43,13 @@ async function main() {
   const BASE_TAG = await getPreviousTag()
   if (!BASE_TAG) throw new Error("Tag anterior não encontrada.")
 
-  console.log(`🔷 Gerando changelog: ${BASE_TAG} → ${HEAD_TAG}`)
+  console.log(`Gerando changelog: ${BASE_TAG} → ${HEAD_TAG}`)
   const commits = await getCommitsBetween(BASE_TAG, HEAD_TAG)
 
   const groups = {}
   const noJira = []
   const contributorsMap = new Map()
-  const prNumbersSet = new Set() // ← Armazena PRs já processados
+  const prNumbersSet = new Set()
 
   for (const commit of commits) {
     const sha = commit.sha
@@ -57,7 +57,7 @@ async function main() {
     if (!pr) continue
 
     const number = pr.number
-    if (prNumbersSet.has(number)) continue // ← Evita duplicatas
+    if (prNumbersSet.has(number)) continue
     prNumbersSet.add(number)
 
     const title = pr.title
