@@ -8,7 +8,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "generate-changelog": "node scripts/generate-changelog.cjs"
+    "generate-changelog": "node scripts/generate-changelog.mjs"
   },
   "dependencies": {
     "dotenv": "^17.2.0",
