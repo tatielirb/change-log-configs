@@ -49,21 +49,19 @@ async function main() {
   const groups = {}
   const noJira = []
   const contributorsMap = new Map()
-
-  const addedPrs = new Set()
-  let changeCounter = 0
-  const changeMap = {}
+  const prNumbersSet = new Set() // ← Armazena PRs já processados
 
   for (const commit of commits) {
     const sha = commit.sha
     const pr = await getPRForCommit(sha)
-    if (!pr || addedPrs.has(pr.number)) continue
+    if (!pr) continue
 
-    addedPrs.add(pr.number)
+    const number = pr.number
+    if (prNumbersSet.has(number)) continue // ← Evita duplicatas
+    prNumbersSet.add(number)
 
     const title = pr.title
     const url = pr.html_url
-    const number = pr.number
     const user = pr.user
 
     if (user) {
@@ -75,41 +73,36 @@ async function main() {
     }
 
     const match = jiraRegex.exec(title)
-    const changeId = `CHANGE-${String(changeCounter).padStart(3, '0')}`
-    const line = `${changeId}: ${title} (#${number} by @${user.login})`
-    changeMap[changeId] = line
-    changeCounter++
+    const line = `- ${title} ([#${number}](${url})) – por [@${user.login}](${user.html_url})`
 
     if (match) {
       const key = match[1]
       if (!groups[key]) groups[key] = []
-      groups[key].push(changeId)
+      groups[key].push(line)
     } else {
-      noJira.push(changeId)
+      noJira.push(line)
     }
   }
 
-  let output = `# v${HEAD_TAG}\n\n`
+  let output = `# Changelog ${HEAD_TAG}\n\n`
 
   const sortedKeys = Object.keys(groups).sort()
   for (const key of sortedKeys) {
-    output += `### ${key}\n`
-    groups[key].forEach(changeId => {
-      output += `${changeMap[changeId]}\n`
-    })
+    output += `## ${key}\n`
+    groups[key].forEach(line => output += line + "\n")
     output += "\n"
   }
 
   if (noJira.length > 0) {
-    output += `### Outros (sem key Jira)\n`
-    noJira.forEach(changeId => output += `${changeMap[changeId]}\n`)
+    output += `## Outros (sem key Jira)\n`
+    noJira.forEach(line => output += line + "\n")
     output += "\n"
   }
 
   if (contributorsMap.size > 0) {
     output += `## 👥 Contribuidores\n\n`
     for (const contributor of contributorsMap.values()) {
-      output += `[![](${contributor.avatar}&s=40)](${contributor.html_url}) [@${contributor.login}](${contributor.html_url})\n\n`
+      output += `[![](${contributor.avatar}&s=40)](${contributor.html_url}) [${contributor.login}](${contributor.html_url})\n\n`
     }
   }
 
