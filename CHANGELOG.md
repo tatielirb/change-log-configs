@@ -1,8 +1,7 @@
-# Changelog v1.0.12
+# vv1.0.13
 
-## CHANGE-021
-- CHANGE-021: Melhoria nas infos ([#25](https://github.com/tatielirb/change-log-configs/pull/25)) – por [@tatielirb](https://github.com/tatielirb)
-- CHANGE-021: Melhoria nas infos ([#25](https://github.com/tatielirb/change-log-configs/pull/25)) – por [@tatielirb](https://github.com/tatielirb)
+### CHANGE-021
+CHANGE-000: CHANGE-021:  added change scrip item list (#26 by @tatielirb)
 
 ## 👥 Contribuidores
 
