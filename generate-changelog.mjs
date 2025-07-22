@@ -73,9 +73,7 @@ async function main() {
     }
 
     const match = jiraRegex.exec(title)
-    const prTitle = `Pull Request #${number}: ${title}`
-    const userTitle = `Usuário: @${user.login}`
-    const line = `- ${title} (<a href="${url}" title="${prTitle}">#${number}</a> by <a href="${user.html_url}" title="${userTitle}">@${user.login}</a>)`
+    const line = `- ${title} ([#${number}](${url})) by @${user.login}`
 
 
     if (match) {
@@ -101,24 +99,6 @@ async function main() {
     noJira.forEach(line => output += line + "\n")
     output += "\n"
   }
-
-  if (contributorsMap.size > 0) {
-    output += `## Contribuidores\n\n`
-    output += `<div style="display: flex; flex-wrap: wrap; gap: 16px;">\n`
-
-    for (const contributor of contributorsMap.values()) {
-      output += `
-  <div style="display: flex; flex-direction: column; align-items: center; width: 80px;">
-    <a href="${contributor.html_url}" title="@${contributor.login}" target="_blank">
-      <img src="${contributor.avatar}&s=64" alt="@${contributor.login}" width="48" height="48" style="border-radius: 50%;"/>
-    </a>
-    <a href="${contributor.html_url}" target="_blank" style="text-align: center; font-size: 12px; margin-top: 4px;">${contributor.login}</a>
-  </div>\n`
-    }
-
-    output += `</div>\n`
-  }
-
 
   fs.writeFileSync("CHANGELOG.md", output)
   console.log("CHANGELOG.md gerado com sucesso.")
