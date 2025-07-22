@@ -26,7 +26,7 @@ jobs:
 
       - name: Generate changelog
         run: |
-          node generate-changelog.js
+          node generate-changelog.cjs
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
