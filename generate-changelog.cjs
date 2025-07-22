@@ -1,6 +1,6 @@
-require("dotenv").config()
-const fs = require("fs")
-const fetch = require("node-fetch")
+import "dotenv/config"
+import fs from "fs"
+import fetch from "node-fetch"
 
 const REPO = process.env.GITHUB_REPOSITORY
 const HEAD_TAG = process.env.GITHUB_REF.replace("refs/tags/", "")
@@ -23,7 +23,7 @@ async function getPreviousTag() {
   const url = `https://api.github.com/repos/${REPO}/tags`
   const tags = await fetchJson(url)
   const tagNames = tags.map(tag => tag.name).filter(name => name !== HEAD_TAG)
-  return tagNames[0] || null // Última tag antes da atual
+  return tagNames[0] || null
 }
 
 async function getCommitsBetween(base, head) {
