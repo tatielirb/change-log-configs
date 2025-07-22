@@ -1,6 +1,5 @@
-import "dotenv/config"
-import fs from "fs"
-import fetch from "node-fetch"
+const fs = require("fs")
+const fetch = require("node-fetch")
 
 const REPO = process.env.GITHUB_REPOSITORY
 const HEAD_TAG = process.env.GITHUB_REF.replace("refs/tags/", "")
