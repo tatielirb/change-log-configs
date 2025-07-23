@@ -1,7 +1,7 @@
 {
   "debug": true,
   "template": "#{{CHANGELOG}}",
-  "pr_template": "- ${{TITLE}} (#${{NUMBER}} by @${{AUTHOR}})\n${{EPIC}}",
+  "pr_template": "- ${{TITLE}} (#${{NUMBER}} by @${{AUTHOR}})\n{{#EPIC[*]}}  - {{.}}\n{{/EPIC[*]}}",
   "empty_template": "- no changes",
   "tag_resolver": {
     "method": "sort"
@@ -43,10 +43,9 @@
       "name": "EPIC",
       "source": "BODY",
       "transformer": {
-        "pattern": "https:\\/\\/corp\\.atlassian\\.net\\/browse\\/([A-Z]{2,10}-\\d+)",
-        "target": "  - [$1](https://corp.atlassian.net/browse/$1)"
-      },
-      "joiner": "\n"
+        "pattern": "https:\\/\\/corp\\.atlassian\\.net\\/browse\\/([A-Z]+-[0-9]+)",
+        "target": "[${1}](https://corp.atlassian.net/browse/${1})"
+      }
     }
   ]
 }
