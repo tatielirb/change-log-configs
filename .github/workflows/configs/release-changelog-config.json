@@ -1,64 +1,51 @@
 {
   "debug": true,
-  "pr_template": "- ${{TITLE}} (#${{NUMBER}} by @${{AUTHOR}})",
+  "template": "#{{CHANGELOG}}",
+  "pr_template": "- ${{TITLE}} (#${{NUMBER}} by @${{AUTHOR}})\n{{#EPIC[*]}}  - {{.}}\n{{/EPIC[*]}}",
   "empty_template": "- no changes",
   "tag_resolver": {
     "method": "sort"
   },
   "categories": [
     {
-      "title": "## Features",
+      "title": "## Squad0",
       "labels": [
-        "feature"
+        "Squad0"
       ]
     },
     {
-      "title": "## Fixes",
+      "title": "## Squad1",
       "labels": [
-        "fix"
+        "Squad1"
       ]
     },
     {
-      "title": "## HotFix",
+      "title": "## Squad2",
       "labels": [
-        "hotfix"
+        "Squad2"
       ]
     },
     {
-      "title": "## Tests",
+      "title": "## Squad3",
       "labels": [
-        "tests"
+        "Squad3"
       ]
     },
     {
-      "title": "## Refactor",
+      "title": "## Squad4",
       "labels": [
-        "refactor"
+        "Squad4"
       ]
-    },
+    }
+  ],
+  "custom_placeholders": [
     {
-      "title": "## Documentations",
-      "labels": [
-        "documentation"
-      ]
-    },
-    {
-      "title": "## Dependencies/Configs",
-      "labels": [
-        "chore"
-      ]
-    },
-    {
-      "title": "## CI/CD",
-      "labels": [
-        "ci"
-      ]
-    },
-    {
-      "title": "## Cherry Pick",
-      "labels": [
-        "cherrypick"
-      ]
+      "name": "EPIC",
+      "source": "BODY",
+      "transformer": {
+        "pattern": "(https:\\/\\/corp\\.atlassian\\.net\\/browse\\/([A-Z]{2,10}-\\d+))",
+        "target": "[$2]($1)"
+      }
     }
   ]
 }
