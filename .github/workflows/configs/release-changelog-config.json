@@ -1,0 +1,51 @@
+{
+  "debug": true,
+  "template": "#{{CHANGELOG}}",
+  "pr_template": "- ${{TITLE}} (#${{NUMBER}} by @${{AUTHOR}})\n{{#EPIC[*]}}  - {{.}}\n{{/EPIC[*]}}",
+  "empty_template": "- no changes",
+  "tag_resolver": {
+    "method": "sort"
+  },
+  "categories": [
+    {
+      "title": "## Squad0",
+      "labels": [
+        "Squad0"
+      ]
+    },
+    {
+      "title": "## Squad1",
+      "labels": [
+        "Squad1"
+      ]
+    },
+    {
+      "title": "## Squad2",
+      "labels": [
+        "Squad2"
+      ]
+    },
+    {
+      "title": "## Squad3",
+      "labels": [
+        "Squad3"
+      ]
+    },
+    {
+      "title": "## Squad4",
+      "labels": [
+        "Squad4"
+      ]
+    }
+  ],
+  "custom_placeholders": [
+    {
+      "name": "EPIC",
+      "source": "BODY",
+      "transformer": {
+        "pattern": "(https:\\/\\/corp\\.atlassian\\.net\\/browse\\/([A-Z]{2,10}-\\d+))",
+        "target": "[$2]($1)"
+      }
+    }
+  ]
+}
