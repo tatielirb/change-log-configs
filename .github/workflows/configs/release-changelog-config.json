@@ -1,7 +1,7 @@
 {
   "debug": true,
-  "template": "#{{CHANGELOG}}",
-  "pr_template": "- ${{TITLE}} (#${{NUMBER}} by @${{AUTHOR}})\n{{#EPIC}}  - {{.}}\n{{/EPIC}}",
+  "template": "# Changelog\n\n#{{CHANGELOG}}",
+  "pr_template": "- ${{TITLE}} (#${{NUMBER}} by @${{AUTHOR}}){{EPIC}}",
   "empty_template": "- no changes",
   "tag_resolver": {
     "method": "sort"
@@ -44,8 +44,9 @@
       "source": "BODY",
       "transformer": {
         "pattern": "https:\\/\\/corp\\.atlassian\\.net\\/browse\\/([A-Z]+-[0-9]+)",
-        "target": "[${1}](https://corp.atlassian.net/browse/${1})"
-      }
+        "target": "\n  - [${1}](https://corp.atlassian.net/browse/${1})"
+      },
+      "joiner": ""
     }
   ]
 }
