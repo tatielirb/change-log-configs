@@ -43,8 +43,8 @@
       "name": "EPIC",
       "source": "BODY",
       "transformer": {
-        "pattern": "(https:\\/\\/corp\\.atlassian\\.net\\/browse\\/([A-Z]{2,10}-\\d+))",
-        "target": "  - [$2]($1)"
+        "pattern": "https:\\/\\/corp\\.atlassian\\.net\\/browse\\/([A-Z]{2,10}-\\d+)",
+        "target": "  - [$1](https://corp.atlassian.net/browse/$1)"
       },
       "joiner": "\n"
     }
