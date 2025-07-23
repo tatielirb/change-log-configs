@@ -1,7 +1,7 @@
 {
   "debug": true,
   "template": "**Jira Referenciados**\n#{{EPIC[*]}}\n\n#{{CHANGELOG}}",
-  "pr_template": "- ${{TITLE}} (#${{NUMBER}} by @${{AUTHOR}}) ${{EPIC}}",
+  "pr_template": "- ${{TITLE}} (#${{NUMBER}} by @${{AUTHOR}})${{EPIC}}",
   "empty_template": "- no changes",
   "tag_resolver": {
     "method": "sort"
@@ -43,9 +43,5 @@
       "name": "EPIC",
       "source": "BODY",
       "transformer": {
-        "pattern": "[\\S\\s]*?(https:\\/\\/corp\\.atlassian\\.net\\/browse\\/EPIC-[A-Z0-9]+)[\\S\\s]*",
-        "target": "$1"
-      }
-    }
-  ]
-}
+        "pattern": "https:\\/\\/corp\\.atlassian\\.net\\/browse\\/([A-Z]+-[0-9]+)",
+        "target": "\n  - [${1}](https://corp)
