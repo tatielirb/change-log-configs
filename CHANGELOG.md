@@ -1,8 +1,8 @@
-# Changelog v1.0.30
+# Changelog v1.0.31
 
-## Squad4
-- CHANGE-018 : adjustment script changelog  train get ([#47](https://github.com/tatielirb/change-log-configs/pull/47)) by @tatielirb
-  - 🔗 AAA-001
-  - 🔗 CTESTE-023
-  - 🔗 CTESTE-024
+## Squad0
+- CTESTE-023: added link with jira ([#48](https://github.com/tatielirb/change-log-configs/pull/48)) by @tatielirb
+  -  [AAA-001](https://corp.atlassian.net/browse/AAA-001)
+  -  [CTESTE-023](https://corp.atlassian.net/browse/CTESTE-023)
+  -  [CTESTE-024](https://corp.atlassian.net/browse/CTESTE-024)
 
