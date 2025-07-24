@@ -38,11 +38,11 @@ async function getPRForCommit(sha) {
 }
 
 function extractJiraTasksFromBody(body) {
-  const regex = /- \[?([A-Z]+-\d+)\]?\s+(.+)/g
+  const regex = /\[\s*([A-Z]+-\d+)\s*\]\([^)]+\)/g
   const matches = []
   let match
   while ((match = regex.exec(body)) !== null) {
-    matches.push(`- 🔗 ${match[1]} ${match[2]}`)
+    matches.push(`- 🔗 ${match[1]}`)
   }
   return matches
 }
