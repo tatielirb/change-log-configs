@@ -1,6 +1,7 @@
 {
   "debug": true,
-  "pr_template": "- ${{TITLE}} (#${{NUMBER}} by @${{AUTHOR}})",
+  "template": "**Epics**\n#{{EPIC[*]}}\n\n#{{CHANGELOG}}",
+  "pr_template": "- ${{TITLE}} (#${{NUMBER}} by @${{AUTHOR}}) ${{EPIC}}",
   "empty_template": "- no changes",
   "tag_resolver": {
     "method": "sort"
@@ -35,6 +36,16 @@
       "labels": [
         "Squad4"
       ]
+    }
+  ],
+  "custom_placeholders": [
+    {
+      "name": "EPIC",
+      "source": "BODY",
+      "transformer": {
+        "pattern": ".*?(https:\\/\\/corp\\.atlassian\\.net\\/browse\\/[A-Z]+-\\d+).*",
+        "target": "- $1"
+      }
     }
   ]
 }
