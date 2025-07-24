@@ -42,7 +42,9 @@ function extractJiraTasksFromBody(body) {
   const matches = []
   let match
   while ((match = regex.exec(body)) !== null) {
-    matches.push(`- 🔗 ${match[1]}`)
+    const key = match[1]
+    const url = `https://corp.atlassian.net/browse/${key}`
+    matches.push(`-  [${key}](${url})`)
   }
   return matches
 }
