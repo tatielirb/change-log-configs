@@ -5,8 +5,6 @@ const REPO = process.env.GITHUB_REPOSITORY
 const HEAD_TAG = process.env.GITHUB_REF.replace("refs/tags/", "")
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN
 
-const jiraRegex = /\b([A-Z]+-\d+)\b/
-
 const headers = {
   Authorization: `token ${GITHUB_TOKEN}`,
   Accept: "application/vnd.github+json"
@@ -39,6 +37,16 @@ async function getPRForCommit(sha) {
   return json.length > 0 ? json[0] : null
 }
 
+function extractJiraTasksFromBody(body) {
+  const regex = /- \[?([A-Z]+-\d+)\]?\s+(.+)/g
+  const matches = []
+  let match
+  while ((match = regex.exec(body)) !== null) {
+    matches.push(`- 🔗 ${match[1]} ${match[2]}`)
+  }
+  return matches
+}
+
 async function main() {
   const BASE_TAG = await getPreviousTag()
   if (!BASE_TAG) throw new Error("Tag anterior não encontrada.")
@@ -47,7 +55,6 @@ async function main() {
   const commits = await getCommitsBetween(BASE_TAG, HEAD_TAG)
 
   const groups = {}
-  const noJira = []
   const contributorsMap = new Map()
   const prNumbersSet = new Set()
 
@@ -63,6 +70,7 @@ async function main() {
     const title = pr.title
     const url = pr.html_url
     const user = pr.user
+    const body = pr.body || ""
 
     if (user) {
       contributorsMap.set(user.login, {
@@ -72,31 +80,25 @@ async function main() {
       })
     }
 
-    const match = jiraRegex.exec(title)
     const line = `- ${title} ([#${number}](${url})) by @${user.login}`
+    const subtasks = extractJiraTasksFromBody(body)
+    const label = pr.labels.find(l => l.name.toLowerCase().includes("squad"))?.name || "Outros"
 
-
-    if (match) {
-      const key = match[1]
-      if (!groups[key]) groups[key] = []
-      groups[key].push(line)
-    } else {
-      noJira.push(line)
-    }
+    if (!groups[label]) groups[label] = []
+    groups[label].push({ line, subtasks })
   }
 
   let output = `# Changelog ${HEAD_TAG}\n\n`
 
-  const sortedKeys = Object.keys(groups).sort()
-  for (const key of sortedKeys) {
-    output += `## ${key}\n`
-    groups[key].forEach(line => output += line + "\n")
-    output += "\n"
-  }
-
-  if (noJira.length > 0) {
-    output += `## Outros (sem key Jira)\n`
-    noJira.forEach(line => output += line + "\n")
+  const sortedLabels = Object.keys(groups).sort()
+  for (const label of sortedLabels) {
+    output += `## ${label}\n`
+    groups[label].forEach(pr => {
+      output += pr.line + "\n"
+      pr.subtasks.forEach(sub => {
+        output += `  ${sub}\n`
+      })
+    })
     output += "\n"
   }
 
