@@ -1,5 +1,8 @@
-# Changelog v1.0.29
+# Changelog v1.0.30
 
-## Squad0
-- CHANGE-025: added new group info ([#46](https://github.com/tatielirb/change-log-configs/pull/46)) by @tatielirb
+## Squad4
+- CHANGE-018 : adjustment script changelog  train get ([#47](https://github.com/tatielirb/change-log-configs/pull/47)) by @tatielirb
+  - 🔗 AAA-001
+  - 🔗 CTESTE-023
+  - 🔗 CTESTE-024
 
