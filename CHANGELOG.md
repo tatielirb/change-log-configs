@@ -1,5 +1,5 @@
-# Changelog v1.0.16
+# Changelog v1.0.29
 
-## CHANGE-021
-- CHANGE-021: new style infos ([#29](https://github.com/tatielirb/change-log-configs/pull/29)) by @tatielirb
+## Squad0
+- CHANGE-025: added new group info ([#46](https://github.com/tatielirb/change-log-configs/pull/46)) by @tatielirb
 
