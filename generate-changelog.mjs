@@ -44,7 +44,7 @@ function extractJiraTasksFromBody(body) {
   while ((match = regex.exec(body)) !== null) {
     const key = match[1]
     const url = `https://corp.atlassian.net/browse/${key}`
-    matches.push(`-  [${key}](${url})`)
+    matches.push(`  - [${key}](${url})`)
   }
   return matches
 }
@@ -56,7 +56,7 @@ async function main() {
   console.log(`Gerando changelog: ${BASE_TAG} → ${HEAD_TAG}`)
   const commits = await getCommitsBetween(BASE_TAG, HEAD_TAG)
 
-  const groups = {}
+  const outputLines = []
   const contributorsMap = new Map()
   const prNumbersSet = new Set()
 
@@ -83,26 +83,15 @@ async function main() {
     }
 
     const line = `- ${title} ([#${number}](${url})) by @${user.login}`
+    outputLines.push(line)
+
     const subtasks = extractJiraTasksFromBody(body)
-    const label = pr.labels.find(l => l.name.toLowerCase().includes("squad"))?.name || "Outros"
-
-    if (!groups[label]) groups[label] = []
-    groups[label].push({ line, subtasks })
+    outputLines.push(...subtasks)
   }
 
-  let output = `# Changelog ${HEAD_TAG}\n\n`
-
-  const sortedLabels = Object.keys(groups).sort()
-  for (const label of sortedLabels) {
-    output += `## ${label}\n`
-    groups[label].forEach(pr => {
-      output += pr.line + "\n"
-      pr.subtasks.forEach(sub => {
-        output += `  ${sub}\n`
-      })
-    })
-    output += "\n"
-  }
+  let output = `# ${HEAD_TAG}\n\n`
+  output += outputLines.join("\n")
+  output += "\n"
 
   fs.writeFileSync("CHANGELOG.md", output)
   console.log("CHANGELOG.md gerado com sucesso.")
