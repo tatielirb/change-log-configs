@@ -6,38 +6,6 @@
   "tag_resolver": {
     "method": "sort"
   },
-  "categories": [
-    {
-      "title": "## Squad0",
-      "labels": [
-        "Squad0"
-      ]
-    },
-    {
-      "title": "## Squad1",
-      "labels": [
-        "Squad1"
-      ]
-    },
-    {
-      "title": "## Squad2",
-      "labels": [
-        "Squad2"
-      ]
-    },
-    {
-      "title": "## Squad3",
-      "labels": [
-        "Squad3"
-      ]
-    },
-    {
-      "title": "## Squad4",
-      "labels": [
-        "Squad4"
-      ]
-    }
-  ],
   "custom_placeholders": [
     {
       "name": "EPIC",
