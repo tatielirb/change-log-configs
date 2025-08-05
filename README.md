@@ -11,6 +11,8 @@ Projeto aplicacao de organizacao de Pull Resquest em tag-release.
 <img width="1119" alt="Screenshot 2025-05-25 at 17 45 51" src="https://github.com/user-attachments/assets/93d6ff5b-95b6-4c13-9354-e08aeed8b501" />
 
 
+Organização por PR e task Jira
+
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/)
