@@ -8,6 +8,7 @@ const GITHUB_TOKEN = process.env.GITHUB_TOKEN
 const JIRA_BASE_URL = "https://opsomie.atlassian.net"
 
 
+
 if (!REPO) {
   console.error("Erro: variável GITHUB_REPOSITORY não está definida.")
   console.error("Exemplo: export GITHUB_REPOSITORY='omiexperience/ops-crm'")
@@ -122,10 +123,16 @@ async function main() {
   const contributorsMap = new Map()
   const prNumbersSet = new Set()
 
+
+  const TARGET_BRANCH = process.env.TARGET_BRANCH || "main"
+
   for (const commit of commits) {
     const sha = commit.sha
     const pr = await getPRForCommit(sha)
     if (!pr) continue
+
+
+    if (pr.base.ref !== TARGET_BRANCH) continue
 
     const number = pr.number
     if (prNumbersSet.has(number)) continue
@@ -153,6 +160,7 @@ async function main() {
 
   console.log("CHANGELOG.md gerado com sucesso.")
 }
+
 
 main().catch(err => {
   console.error("Erro:", err.message)
