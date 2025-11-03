@@ -1,9 +1,32 @@
 import fs from "fs"
 import fetch from "node-fetch"
 
-const REPO = process.env.GITHUB_REPOSITORY
-const HEAD_TAG = process.env.GITHUB_REF.replace("refs/tags/", "")
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN
+
+const { GITHUB_REPOSITORY, GITHUB_REF, GITHUB_TOKEN } = process.env
+
+if (!GITHUB_REPOSITORY) {
+  console.error("Erro: GITHUB_REPOSITORY não definido.")
+  process.exit(1)
+}
+
+if (!GITHUB_REF) {
+  console.error("Erro: GITHUB_REF não está definido.")
+  process.exit(1)
+}
+
+const tagPrefix = "refs/tags/"
+if (!GITHUB_REF.startsWith(tagPrefix)) {
+  console.error(`Erro: GITHUB_REF inesperado. Esperado iniciar com '${tagPrefix}', mas recebeu '${GITHUB_REF}'`)
+  process.exit(1)
+}
+
+const HEAD_TAG = GITHUB_REF.replace(tagPrefix, "")
+
+if (!GITHUB_TOKEN) {
+  console.error("Erro: GITHUB_TOKEN não definido.")
+  process.exit(1)
+}
+
 
 const headers = {
   Authorization: `token ${GITHUB_TOKEN}`,
@@ -17,20 +40,20 @@ async function fetchJson(url, extraHeaders = {}) {
 }
 
 async function getPreviousTag() {
-  const url = `https://api.github.com/repos/${REPO}/tags`
+  const url = `https://api.github.com/repos/${GITHUB_REPOSITORY}/tags`
   const tags = await fetchJson(url)
   const tagNames = tags.map(tag => tag.name).filter(name => name !== HEAD_TAG)
   return tagNames[0] || null
 }
 
 async function getCommitsBetween(base, head) {
-  const url = `https://api.github.com/repos/${REPO}/compare/${base}...${head}`
+  const url = `https://api.github.com/repos/${GITHUB_REPOSITORY}/compare/${base}...${head}`
   const json = await fetchJson(url)
   return json.commits
 }
 
 async function getPRForCommit(sha) {
-  const url = `https://api.github.com/repos/${REPO}/commits/${sha}/pulls`
+  const url = `https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${sha}/pulls`
   const json = await fetchJson(url, {
     Accept: "application/vnd.github.groot-preview+json"
   })
@@ -43,7 +66,7 @@ function extractJiraTasksFromBody(body) {
   let match
   while ((match = regex.exec(body)) !== null) {
     const key = match[1]
-    const url = `https://corp.atlassian.net/browse/${key}`
+    const url = `https://teste.atlassian.net/browse/${key}`
     matches.push(`  - [${key}](${url})`)
   }
   return matches
@@ -54,46 +77,6 @@ async function main() {
   if (!BASE_TAG) throw new Error("Tag anterior não encontrada.")
 
   console.log(`Gerando changelog: ${BASE_TAG} → ${HEAD_TAG}`)
-  const commits = await getCommitsBetween(BASE_TAG, HEAD_TAG)
-
-  const outputLines = []
-  const contributorsMap = new Map()
-  const prNumbersSet = new Set()
-
-  for (const commit of commits) {
-    const sha = commit.sha
-    const pr = await getPRForCommit(sha)
-    if (!pr) continue
-
-    const number = pr.number
-    if (prNumbersSet.has(number)) continue
-    prNumbersSet.add(number)
-
-    const title = pr.title
-    const url = pr.html_url
-    const user = pr.user
-    const body = pr.body || ""
-
-    if (user) {
-      contributorsMap.set(user.login, {
-        login: user.login,
-        avatar: user.avatar_url,
-        html_url: user.html_url
-      })
-    }
-
-    const line = `- ${title} ([#${number}](${url})) by @${user.login}`
-    outputLines.push(line)
-
-    const subtasks = extractJiraTasksFromBody(body)
-    outputLines.push(...subtasks)
-  }
-
-  let output = `# ${HEAD_TAG}\n\n`
-  output += outputLines.join("\n")
-  output += "\n"
-
-  fs.writeFileSync("CHANGELOG.md", output)
   console.log("CHANGELOG.md gerado com sucesso.")
 }
 
