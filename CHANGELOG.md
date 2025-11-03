@@ -1,8 +1,10 @@
-# v1.0.33
+# v1.0.35
 
-- AAA-004: adde new description ([#50](https://github.com/tatielirb/change-log-configs/pull/50)) by @tatielirb
-  - [AAA-004](https://corp.atlassian.net/browse/AAA-004)
-- TATI-007: New config ([#51](https://github.com/tatielirb/change-log-configs/pull/51)) by @tatielirb
-  - [TATI-007](https://corp.atlassian.net/browse/TATI-007)
-- TATI-007: New config  ([#52](https://github.com/tatielirb/change-log-configs/pull/52)) by @tatielirb
-  - [TATI-007](https://corp.atlassian.net/browse/TATI-007)
+- TATI-008: New config teste ([#55](https://github.com/tatielirb/change-log-configs/pull/55)) by @tatielirb
+  - [TATI-008](https://opsomie.atlassian.net/browse/TATI-008)
+- TATI-008: New config teste  ([#56](https://github.com/tatielirb/change-log-configs/pull/56)) by @tatielirb
+  - [TATI-008](https://opsomie.atlassian.net/browse/TATI-008)
+- TATI-008: New config teste workflox ([#57](https://github.com/tatielirb/change-log-configs/pull/57)) by @tatielirb
+  - [TATI-008](https://opsomie.atlassian.net/browse/TATI-008)
+- TATI-008: New config teste workflox  ([#58](https://github.com/tatielirb/change-log-configs/pull/58)) by @tatielirb
+  - [TATI-008](https://opsomie.atlassian.net/browse/TATI-008)
