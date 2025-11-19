@@ -54,7 +54,7 @@ function extractJiraTasksFromBody(body) {
 }
 
 async function main() {
-  console.log(`Tag atual: ${HEAD_TAG}`)
+  console.log(`Tag atual do repo: ${HEAD_TAG}`)
   console.log(`Repositório: ${REPO}`)
   console.log("Buscando tag anterior...")
 
