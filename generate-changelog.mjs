@@ -42,22 +42,28 @@ async function getPRForCommit(sha) {
 
 function extractJiraTasksFromBody(body) {
   if (!body) return []
-  const regex = /\[\s*([A-Z]+-\d+[^\]]*)\s*\]\(([^)]+)\)(?:\s*[-:]\s*(.*))?/g
-  const tasks = []
-  let match
 
-  while ((match = regex.exec(body)) !== null) {
+  const tasks = []
+  const lines = body.split("\n")
+
+  for (const line of lines) {
+    const regex = /^\s*-\s*\[\s*([A-Z]+-\d+[^\]]*)\s*\]\((https?:\/\/[^)]+)\)(?:\s*[-:]\s*(.*))?/
+
+    const match = line.match(regex)
+    if (!match) continue
+
     const label = match[1].trim()
     const link = match[2].trim()
-    const after = match[3]?.trim()
+    const extra = match[3]?.trim()
 
-    const newLabel = after ? `${label} - ${after}` : label
+    const finalLabel = extra ? `${label} - ${extra}` : label
 
-    tasks.push(`  - [${newLabel}](${link})`)
+    tasks.push(`  - [${finalLabel}](${link})`)
   }
 
   return tasks
 }
+
 
 async function main() {
   console.log(`Tag atual: ${HEAD_TAG}`)
