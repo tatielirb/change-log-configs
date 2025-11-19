@@ -1,7 +1,6 @@
 import fs from "fs"
 import fetch from "node-fetch"
 
-
 const REPO = process.env.GITHUB_REPOSITORY
 const GITHUB_REF = process.env.GITHUB_REF
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN
@@ -98,10 +97,7 @@ async function getPRForCommit(sha) {
 
 function extractJiraTasksFromBody(body) {
   if (!body) return []
-
-
   const regex = /\[\s*([A-Z]+-\d+[^\]]*)\s*\]\(([^)]+)\)(?:\s*[-:]\s*(.*))?/g
-
   const tasks = []
   let match
 
