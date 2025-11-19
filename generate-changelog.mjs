@@ -44,19 +44,26 @@ async function getPRForCommit(sha) {
 function extractJiraTasksFromBody(body) {
   if (!body) return []
 
-  const regex = /\[\s*([A-Z]+-\d+)[^\]]*\]\([^)]*\)/g
+  const regex = /\[\s*([A-Z]+-\d+[^\]]*)\]\([^)]*\)(?:\s*[-:]\s*(.*))?/g
 
-  const matches = []
+  const tasks = []
   let match
 
   while ((match = regex.exec(body)) !== null) {
-    const key = match[1]
-    const url = `${JIRA_BASE_URL}/browse/${key}`
-    matches.push(`  - [${key}](${url})`)
+    const label = match[1].trim()
+    const afterText = match[2]?.trim()
+
+    let full = label
+    if (afterText) {
+      full += ` - ${afterText}`
+    }
+
+    tasks.push(`  - ${full}`)
   }
 
-  return matches
+  return tasks
 }
+
 
 
 async function main() {
