@@ -1,7 +1,6 @@
 import fs from "fs"
 import fetch from "node-fetch"
 
-
 const REPO = process.env.GITHUB_REPOSITORY
 const GITHUB_REF = process.env.GITHUB_REF
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN
@@ -98,28 +97,22 @@ async function getPRForCommit(sha) {
 
 function extractJiraTasksFromBody(body) {
   if (!body) return []
-
-  const regex = /\[\s*([A-Z]+-\d+[^\]]*)\]\([^)]*\)(?:\s*[-:]\s*(.*))?/g
-
+  const regex = /\[\s*([A-Z]+-\d+[^\]]*)\s*\]\(([^)]+)\)(?:\s*[-:]\s*(.*))?/g
   const tasks = []
   let match
 
   while ((match = regex.exec(body)) !== null) {
     const label = match[1].trim()
-    const afterText = match[2]?.trim()
+    const link = match[2].trim()
+    const after = match[3]?.trim()
 
-    let full = label
-    if (afterText) {
-      full += ` - ${afterText}`
-    }
+    const newLabel = after ? `${label} - ${after}` : label
 
-    tasks.push(`  - ${full}`)
+    tasks.push(`  - [${newLabel}](${link})`)
   }
 
   return tasks
 }
-
-
 
 async function main() {
   console.log(`Tag atual do repo: ${HEAD_TAG}`)
