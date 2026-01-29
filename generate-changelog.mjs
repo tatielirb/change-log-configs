@@ -114,6 +114,9 @@ function extractJiraTasksFromBody(body) {
   return tasks
 }
 
+  return tasks
+}
+
 async function main() {
   console.log(`Tag atual: ${HEAD_TAG}`)
   console.log(`Repositório: ${REPO}`)
@@ -159,6 +162,7 @@ async function main() {
     outputLines.push(`- ${title} ([#${number}](${url})) by @${user.login}`)
     outputLines.push(...extractJiraTasksFromBody(body))
   }
+
 
   const output = `${outputLines.join("\n")}\n`
   fs.writeFileSync("CHANGELOG.md", output)
