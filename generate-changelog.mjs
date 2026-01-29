@@ -160,7 +160,8 @@ async function main() {
     outputLines.push(...extractJiraTasksFromBody(body))
   }
 
-  const output = `# ${HEAD_TAG}\n\n${outputLines.join("\n")}\n`
+
+  const output = `${outputLines.join("\n")}\n`
   fs.writeFileSync("CHANGELOG.md", output)
 
   console.log("CHANGELOG.md gerado com sucesso.")
