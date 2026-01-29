@@ -6,8 +6,6 @@ const GITHUB_REF = process.env.GITHUB_REF
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN
 const JIRA_BASE_URL = "https://opsomie.atlassian.net"
 
-
-
 if (!REPO) {
   console.error("Erro: variável GITHUB_REPOSITORY não está definida.")
   console.error("Exemplo: export GITHUB_REPOSITORY='omiexperience/ops-crm'")
@@ -78,13 +76,11 @@ async function getPreviousTag() {
   return sortedTags[currentIndex - 1]
 }
 
-
 async function getCommitsBetween(base, head) {
   const url = `https://api.github.com/repos/${REPO}/compare/${base}...${head}`
   const json = await fetchJson(url)
   return json.commits
 }
-
 
 async function getPRForCommit(sha) {
   const url = `https://api.github.com/repos/${REPO}/commits/${sha}/pulls`
@@ -93,7 +89,6 @@ async function getPRForCommit(sha) {
   })
   return json.length > 0 ? json[0] : null
 }
-
 
 function extractJiraTasksFromBody(body) {
   if (!body) return []
@@ -123,7 +118,7 @@ function extractJiraTasksFromBody(body) {
 }
 
 async function main() {
-  console.log(`Tag atual do repo: ${HEAD_TAG}`)
+  console.log(`Tag atual: ${HEAD_TAG}`)
   console.log(`Repositório: ${REPO}`)
   console.log("Buscando tag anterior...")
 
@@ -174,7 +169,6 @@ async function main() {
 
   console.log("CHANGELOG.md gerado com sucesso.")
 }
-
 
 main().catch(err => {
   console.error("Erro:", err.message)
