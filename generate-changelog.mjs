@@ -1,13 +1,10 @@
 import fs from "fs"
 import fetch from "node-fetch"
 
-
 const REPO = process.env.GITHUB_REPOSITORY
 const GITHUB_REF = process.env.GITHUB_REF
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN
 const JIRA_BASE_URL = "https://opsomie.atlassian.net"
-
-
 
 if (!REPO) {
   console.error("Erro: variável GITHUB_REPOSITORY não está definida.")
@@ -79,13 +76,11 @@ async function getPreviousTag() {
   return sortedTags[currentIndex - 1]
 }
 
-
 async function getCommitsBetween(base, head) {
   const url = `https://api.github.com/repos/${REPO}/compare/${base}...${head}`
   const json = await fetchJson(url)
   return json.commits
 }
-
 
 async function getPRForCommit(sha) {
   const url = `https://api.github.com/repos/${REPO}/commits/${sha}/pulls`
@@ -95,31 +90,32 @@ async function getPRForCommit(sha) {
   return json.length > 0 ? json[0] : null
 }
 
-
 function extractJiraTasksFromBody(body) {
   if (!body) return []
 
-
-  const regex = /\[\s*([A-Z]+-\d+[^\]]*)\s*\]\(([^)]+)\)(?:\s*[-:]\s*(.*))?/g
-
   const tasks = []
-  let match
+  const lines = body.split("\n")
 
-  while ((match = regex.exec(body)) !== null) {
+  for (const line of lines) {
+    const regex = /^\s*-\s*\[\s*([A-Z]+-\d+[^\]]*)\s*\]\((https?:\/\/[^)]+)\)(?:\s*[-:]\s*(.*))?/
+
+    const match = line.match(regex)
+    if (!match) continue
+
     const label = match[1].trim()
     const link = match[2].trim()
-    const after = match[3]?.trim()
+    const extra = match[3]?.trim()
 
-    const newLabel = after ? `${label} - ${after}` : label
+    const finalLabel = extra ? `${label} - ${extra}` : label
 
-    tasks.push(`  - [${newLabel}](${link})`)
+    tasks.push(`  - [${finalLabel}](${link})`)
   }
 
   return tasks
 }
 
 async function main() {
-  console.log(`Tag atual do repo: ${HEAD_TAG}`)
+  console.log(`Tag atual: ${HEAD_TAG}`)
   console.log(`Repositório: ${REPO}`)
   console.log("Buscando tag anterior...")
 
@@ -164,12 +160,11 @@ async function main() {
     outputLines.push(...extractJiraTasksFromBody(body))
   }
 
-  const output = `# ${HEAD_TAG}\n\n${outputLines.join("\n")}\n`
+  const output = `${outputLines.join("\n")}\n`
   fs.writeFileSync("CHANGELOG.md", output)
 
   console.log("CHANGELOG.md gerado com sucesso.")
 }
-
 
 main().catch(err => {
   console.error("Erro:", err.message)
