@@ -114,9 +114,6 @@ function extractJiraTasksFromBody(body) {
   return tasks
 }
 
-  return tasks
-}
-
 async function main() {
   console.log(`Tag atual: ${HEAD_TAG}`)
   console.log(`Repositório: ${REPO}`)
