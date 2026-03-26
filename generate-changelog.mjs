@@ -1,36 +1,35 @@
-import fs from "fs"
-import fetch from "node-fetch"
+import fs from 'fs'
+import fetch from 'node-fetch'
 
 const REPO = process.env.GITHUB_REPOSITORY
 const GITHUB_REF = process.env.GITHUB_REF
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN
-const JIRA_BASE_URL = "https://opsomie.atlassian.net"
+const JIRA_BASE_URL = 'https://jira.atlassian.net'
 
 if (!REPO) {
-  console.error("Erro: variável GITHUB_REPOSITORY não está definida.")
-  console.error("Exemplo: export GITHUB_REPOSITORY='omiexperience/ops-crm'")
+  console.error('Erro: variável GITHUB_REPOSITORY não está definida.')
+  console.error("Exemplo: export GITHUB_REPOSITORY='tatielirb/change-log-configs'")
   process.exit(1)
 }
 
-if (!GITHUB_REF || !GITHUB_REF.startsWith("refs/tags/")) {
-  console.error("Erro: variável GITHUB_REF ausente ou em formato incorreto.")
+if (!GITHUB_REF || !GITHUB_REF.startsWith('refs/tags/')) {
+  console.error('Erro: variável GITHUB_REF ausente ou em formato incorreto.')
   console.error("Exemplo: export GITHUB_REF='refs/tags/v2.20251020'")
   process.exit(1)
 }
 
 if (!GITHUB_TOKEN) {
-  console.error("Erro: variável GITHUB_TOKEN não está definida.")
-  console.error("Use um token pessoal ou o secrets.GITHUB_TOKEN do GitHub Actions.")
+  console.error('Erro: variável GITHUB_TOKEN não está definida.')
+  console.error('Use um token pessoal ou o secrets.GITHUB_TOKEN do GitHub Actions.')
   process.exit(1)
 }
 
-const HEAD_TAG = GITHUB_REF.replace("refs/tags/", "")
+const HEAD_TAG = GITHUB_REF.replace('refs/tags/', '')
 
 const headers = {
   Authorization: `token ${GITHUB_TOKEN}`,
-  Accept: "application/vnd.github+json"
+  Accept: 'application/vnd.github+json',
 }
-
 
 async function fetchJson(url, extraHeaders = {}) {
   const res = await fetch(url, { headers: { ...headers, ...extraHeaders } })
@@ -39,7 +38,6 @@ async function fetchJson(url, extraHeaders = {}) {
   }
   return res.json()
 }
-
 
 async function getPreviousTag() {
   let page = 1
@@ -53,14 +51,14 @@ async function getPreviousTag() {
     page++
   }
 
-  const tagNames = allTags.map(tag => tag.name)
+  const tagNames = allTags.map((tag) => tag.name)
   if (!tagNames.includes(HEAD_TAG)) {
     throw new Error(`Tag atual (${HEAD_TAG}) não encontrada na lista de tags do repositório.`)
   }
 
   const sortedTags = tagNames.sort((a, b) => {
-    const pa = a.replace(/^v/, "").split(".").map(Number)
-    const pb = b.replace(/^v/, "").split(".").map(Number)
+    const pa = a.replace(/^v/, '').split('.').map(Number)
+    const pb = b.replace(/^v/, '').split('.').map(Number)
     for (let i = 0;i < Math.max(pa.length, pb.length);i++) {
       const diff = (pa[i] || 0) - (pb[i] || 0)
       if (diff !== 0) return diff
@@ -70,7 +68,7 @@ async function getPreviousTag() {
 
   const currentIndex = sortedTags.indexOf(HEAD_TAG)
   if (currentIndex <= 0) {
-    throw new Error("Não há tag anterior a esta (possivelmente é o primeiro release).")
+    throw new Error('Não há tag anterior a esta (possivelmente é o primeiro release).')
   }
 
   return sortedTags[currentIndex - 1]
@@ -85,16 +83,17 @@ async function getCommitsBetween(base, head) {
 async function getPRForCommit(sha) {
   const url = `https://api.github.com/repos/${REPO}/commits/${sha}/pulls`
   const json = await fetchJson(url, {
-    Accept: "application/vnd.github.groot-preview+json"
+    Accept: 'application/vnd.github.groot-preview+json',
   })
-  return json.length > 0 ? json[0] : null
+
+  return json.find((pr) => pr.merged_at) || null
 }
 
 function extractJiraTasksFromBody(body) {
   if (!body) return []
 
   const tasks = []
-  const lines = body.split("\n")
+  const lines = body.split('\n')
 
   for (const line of lines) {
     const regex = /^\s*-\s*\[\s*([A-Z]+-\d+[^\]]*)\s*\]\((https?:\/\/[^)]+)\)(?:\s*[-:]\s*(.*))?/
@@ -117,7 +116,7 @@ function extractJiraTasksFromBody(body) {
 async function main() {
   console.log(`Tag atual: ${HEAD_TAG}`)
   console.log(`Repositório: ${REPO}`)
-  console.log("Buscando tag anterior...")
+  console.log('Buscando tag anterior...')
 
   const BASE_TAG = await getPreviousTag()
   console.log(`Tag anterior encontrada: ${BASE_TAG}`)
@@ -128,14 +127,14 @@ async function main() {
   const contributorsMap = new Map()
   const prNumbersSet = new Set()
 
-
-  const TARGET_BRANCH = process.env.TARGET_BRANCH || "main"
+  const TARGET_BRANCH = process.env.TARGET_BRANCH || 'homolog'
 
   for (const commit of commits) {
     const sha = commit.sha
     const pr = await getPRForCommit(sha)
     if (!pr) continue
 
+    if (!pr.merged_at) continue
 
     if (pr.base.ref !== TARGET_BRANCH) continue
 
@@ -146,13 +145,13 @@ async function main() {
     const title = pr.title
     const url = pr.html_url
     const user = pr.user
-    const body = pr.body || ""
+    const body = pr.body || ''
 
     if (user) {
       contributorsMap.set(user.login, {
         login: user.login,
         avatar: user.avatar_url,
-        html_url: user.html_url
+        html_url: user.html_url,
       })
     }
 
@@ -160,14 +159,13 @@ async function main() {
     outputLines.push(...extractJiraTasksFromBody(body))
   }
 
+  const output = `${outputLines.join('\n')}\n`
+  fs.writeFileSync('CHANGELOG.md', output)
 
-  const output = `${outputLines.join("\n")}\n`
-  fs.writeFileSync("CHANGELOG.md", output)
-
-  console.log("CHANGELOG.md gerado com sucesso.")
+  console.log('CHANGELOG.md gerado com sucesso.')
 }
 
-main().catch(err => {
-  console.error("Erro:", err.message)
+main().catch((err) => {
+  console.error('Erro:', err.message)
   process.exit(1)
 })
