@@ -1,19 +1,64 @@
 {
   "debug": true,
-  "template": "**Epics**\n#{{EPIC[*]}}\n\n#{{CHANGELOG}}",
-  "pr_template": "- ${{TITLE}} (#${{NUMBER}} by @${{AUTHOR}}) ${{EPIC}}",
+  "pr_template": "- ${{TITLE}} (#${{NUMBER}} by @${{AUTHOR}})",
   "empty_template": "- no changes",
   "tag_resolver": {
     "method": "sort"
   },
-  "custom_placeholders": [
+  "categories": [
     {
-      "name": "EPIC",
-      "source": "BODY",
-      "transformer": {
-        "pattern": ".*?(https:\\/\\/corp\\.atlassian\\.net\\/browse\\/[A-Z]+-\\d+).*",
-        "target": "- $1"
-      }
+      "title": "## Features",
+      "labels": [
+        "feature"
+      ]
+    },
+    {
+      "title": "## Fixes",
+      "labels": [
+        "fix"
+      ]
+    },
+    {
+      "title": "## HotFix",
+      "labels": [
+        "hotfix"
+      ]
+    },
+    {
+      "title": "## Tests",
+      "labels": [
+        "tests"
+      ]
+    },
+    {
+      "title": "## Refactor",
+      "labels": [
+        "refactor"
+      ]
+    },
+    {
+      "title": "## Documentations",
+      "labels": [
+        "documentation"
+      ]
+    },
+    {
+      "title": "## Dependencies/Configs",
+      "labels": [
+        "chore"
+      ]
+    },
+    {
+      "title": "## CI/CD",
+      "labels": [
+        "ci"
+      ]
+    },
+    {
+      "title": "## Cherry Pick",
+      "labels": [
+        "cherrypick"
+      ]
     }
   ]
 }

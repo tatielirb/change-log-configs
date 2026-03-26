@@ -1,2 +1,0 @@
-- AAA-008: New teste  ([#75](https://github.com/tatielirb/change-log-configs/pull/75)) by @tatielirb
-  - [AAA-11629- Aplicar regras para status das oportunidades para Implementação e multivarejo](https://atlassian.net/browse/CRM-11629)
